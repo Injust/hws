@@ -1,0 +1,8 @@
+/var/log/hws/*.log {
+	compress
+	create 644 http http
+	missingok
+	notifempty
+	rotate 7
+	su http http
+}

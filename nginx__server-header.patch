@@ -1,0 +1,26 @@
+diff --git a/src/http/ngx_http_header_filter_module.c b/src/http/ngx_http_header_filter_module.c
+index 6097f46..9a44f94 100644
+--- a/src/http/ngx_http_header_filter_module.c
++++ b/src/http/ngx_http_header_filter_module.c
+@@ -46,7 +46,7 @@ ngx_module_t  ngx_http_header_filter_module = {
+ };
+ 
+ 
+-static u_char ngx_http_server_string[] = "Server: nginx" CRLF;
++static u_char ngx_http_server_string[] = "Server: hws" CRLF;
+ static u_char ngx_http_server_full_string[] = "Server: " NGINX_VER CRLF;
+ static u_char ngx_http_server_build_string[] = "Server: " NGINX_VER_BUILD CRLF;
+ 
+diff --git a/src/http/v2/ngx_http_v2_filter_module.c b/src/http/v2/ngx_http_v2_filter_module.c
+index 254f7b9..d6dd71b 100644
+--- a/src/http/v2/ngx_http_v2_filter_module.c
++++ b/src/http/v2/ngx_http_v2_filter_module.c
+@@ -446,7 +446,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
+             pos = ngx_http_v2_write_header_str("server", NGINX_VER_BUILD);
+ 
+         } else {
+-            pos = ngx_http_v2_write_header_str("server", "nginx");
++            pos = ngx_http_v2_write_header_str("server", "hws");
+         }
+     }
+ 
