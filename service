@@ -1,7 +1,6 @@
 [Unit]
 After=network-online.target systemd-networkd-wait-online.service
 Description=Hydronium Web Server
-Wants=network-online.target systemd-networkd-wait-online.service
 
 [Service]
 Restart=on-failure
