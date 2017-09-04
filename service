@@ -1,5 +1,5 @@
 [Unit]
-After=network-online.target systemd-networkd-wait-online.service
+After=network.target
 Description=Hydronium Web Server
 
 [Service]
