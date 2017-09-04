@@ -5,7 +5,6 @@ Wants=network-online.target systemd-networkd-wait-online.service
 
 [Service]
 Restart=on-failure
-SyslogLevel=notice
 Type=forking
 User=http
 
