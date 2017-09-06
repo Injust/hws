@@ -1,8 +1,8 @@
 diff --git a/src/event/ngx_event_openssl.c b/src/event/ngx_event_openssl.c
-index 07646b6..a3eab74 100644
+index 88a6dbe..b2b7a5f 100644
 --- a/src/event/ngx_event_openssl.c
 +++ b/src/event/ngx_event_openssl.c
-@@ -1173,6 +1173,7 @@ ngx_ssl_create_connection(ngx_ssl_t *ssl, ngx_connection_t *c, ngx_uint_t flags)
+@@ -1174,6 +1174,7 @@ ngx_ssl_create_connection(ngx_ssl_t *ssl, ngx_connection_t *c, ngx_uint_t flags)
  
      sc->buffer = ((flags & NGX_SSL_BUFFER) != 0);
      sc->buffer_size = ssl->buffer_size;
@@ -10,7 +10,7 @@ index 07646b6..a3eab74 100644
  
      sc->session_ctx = ssl->ctx;
  
-@@ -1711,6 +1712,41 @@ ngx_ssl_send_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
+@@ -1712,6 +1713,41 @@ ngx_ssl_send_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
  
      for ( ;; ) {
  
@@ -52,7 +52,7 @@ index 07646b6..a3eab74 100644
          while (in && buf->last < buf->end && send < limit) {
              if (in->buf->last_buf || in->buf->flush) {
                  flush = 1;
-@@ -1812,6 +1848,9 @@ ngx_ssl_write(ngx_connection_t *c, u_char *data, size_t size)
+@@ -1813,6 +1849,9 @@ ngx_ssl_write(ngx_connection_t *c, u_char *data, size_t size)
  
      if (n > 0) {
  
@@ -63,7 +63,7 @@ index 07646b6..a3eab74 100644
  
              c->read->handler = c->ssl->saved_read_handler;
 diff --git a/src/event/ngx_event_openssl.h b/src/event/ngx_event_openssl.h
-index 2a14980..6ab94ae 100644
+index b9a3a96..93e45ad 100644
 --- a/src/event/ngx_event_openssl.h
 +++ b/src/event/ngx_event_openssl.h
 @@ -59,10 +59,19 @@
@@ -107,7 +107,7 @@ index 2a14980..6ab94ae 100644
  typedef struct ngx_ssl_sess_id_s  ngx_ssl_sess_id_t;
  
 diff --git a/src/http/modules/ngx_http_ssl_module.c b/src/http/modules/ngx_http_ssl_module.c
-index 4370275..32fecab 100644
+index 7d62176..1e016eb 100644
 --- a/src/http/modules/ngx_http_ssl_module.c
 +++ b/src/http/modules/ngx_http_ssl_module.c
 @@ -234,6 +234,41 @@ static ngx_command_t  ngx_http_ssl_commands[] = {
@@ -152,7 +152,7 @@ index 4370275..32fecab 100644
        ngx_null_command
  };
  
-@@ -555,6 +590,11 @@ ngx_http_ssl_create_srv_conf(ngx_conf_t *cf)
+@@ -559,6 +594,11 @@ ngx_http_ssl_create_srv_conf(ngx_conf_t *cf)
      sscf->session_ticket_keys = NGX_CONF_UNSET_PTR;
      sscf->stapling = NGX_CONF_UNSET;
      sscf->stapling_verify = NGX_CONF_UNSET;
@@ -164,7 +164,7 @@ index 4370275..32fecab 100644
  
      return sscf;
  }
-@@ -620,6 +660,20 @@ ngx_http_ssl_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child)
+@@ -624,6 +664,20 @@ ngx_http_ssl_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child)
      ngx_conf_merge_str_value(conf->stapling_responder,
                           prev->stapling_responder, "");
  
@@ -185,7 +185,7 @@ index 4370275..32fecab 100644
      conf->ssl.log = cf->log;
  
      if (conf->enable) {
-@@ -800,6 +854,28 @@ ngx_http_ssl_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child)
+@@ -804,6 +858,28 @@ ngx_http_ssl_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child)
  
      }
  
