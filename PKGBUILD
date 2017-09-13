@@ -32,7 +32,7 @@ sha384sums=(
 source=(
 	git+https://github.com/ghedo/http2-push-nginx-module
 	git+https://github.com/google/ngx_brotli.git
-	https://caddyserver.com/download/linux/amd64
+	https://caddyserver.com/download/linux/amd64?license=personal
 	https://codeload.github.com/pagespeed/ngx_pagespeed/tar.gz/latest-beta
 	https://nginx.org/download/nginx-$pkgver.tar.gz
 	https://www.openssl.org/source/openssl-$opensslver.tar.gz
