@@ -4,6 +4,7 @@ pkgdesc="Hydronium Web Server"
 arch=(i686 x86_64)
 conflicts=(caddy nginx)
 depends=(pcre zlib)
+fancyindexver=0.4.2
 makedepends=(git)
 opensslver=1.1.0f
 pkgrel=1
@@ -14,6 +15,7 @@ sha384sums=(
 	SKIP
 	SKIP
 	4e62fb4217cead679c49762c7f01d3c13222b060b651373530fc07441be2214ac35d4d4ce409408373396347b7dafb5b
+	0f7403a1fd97ec05842573064496d4abf66ffaf9eb9afbad7636b7914940af2a1678a83b8436baabb3ddce4555fb9fbe
 	1a9eafe1589d8eff8da8ea755c7e4b468e7efec6dc7bbde113036ddbbf755f505ceb9625b5c9c1a87821a92102b3575a
 	54a1f247cddcaed1420920035bf9fe1a50dd41d283a6cf93e891878907adfae3ea683ddbe441ef19c8364926c65489e8
 	5039fac50d6374ced88a2bbb60462833d6b8e643a73dbc73c5db94a9a1853dab7a5b09c95df2ffc4c0904db4ef5e9ade
@@ -33,6 +35,7 @@ source=(
 	git+https://github.com/ghedo/http2-push-nginx-module
 	git+https://github.com/google/ngx_brotli.git
 	https://caddyserver.com/download/linux/amd64?license=personal
+	https://codeload.github.com/aperezdc/ngx-fancyindex/tar.gz/v$fancyindexver
 	https://codeload.github.com/pagespeed/ngx_pagespeed/tar.gz/latest-beta
 	https://nginx.org/download/nginx-$pkgver.tar.gz
 	https://www.openssl.org/source/openssl-$opensslver.tar.gz
@@ -50,6 +53,7 @@ source=(
 
 _build_parameters=(
 	--add-module=../http2-push-nginx-module
+	--add-module=../ngx-fancyindex-$fancyindexver
 	--add-module=../ngx_brotli
 	--add-module=../ngx_pagespeed-latest-beta
 	--conf-path=/etc/hws/nginx.conf
@@ -60,6 +64,7 @@ _build_parameters=(
 	--sbin-path=/usr/bin/hws-nginx
 	--with-cc-opt="-DTCP_FASTOPEN=23"
 	--with-file-aio
+	--with-http_addition_module
 	--with-http_realip_module
 	--with-http_spdy_module
 	--with-http_ssl_module
