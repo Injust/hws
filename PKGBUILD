@@ -38,7 +38,7 @@ source=(
 	https://www.openssl.org/source/openssl-$opensslver.tar.gz
 	logrotate
 	nginx__204-headers.patch
-	nginx__autoindex_ftw.patch
+	nginx__autoindex-ftw.patch
 	nginx__dynamic-tls-records.patch
 	nginx__http2-hpack.patch
 	nginx__http2-push.patch
