@@ -6,6 +6,11 @@ Description=Hydronium Web Server
 Restart=on-failure
 Type=forking
 
+CacheDirectory=hws
+LogsDirectory=hws
+RuntimeDirectory=hws
+StateDirectory=hws
+
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 LimitNOFILE=8192
 PrivateDevices=true
@@ -15,8 +20,6 @@ ProtectHome=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectSystem=strict
-ReadWritePaths=/var/cache/hws /var/lib/hws /var/log/hws
-RuntimeDirectory=hws
 User=http
 
 ExecStartPre=/usr/bin/hws-nginx -t
