@@ -1,42 +1,53 @@
 diff --git a/src/http/modules/ngx_http_autoindex_module.c b/src/http/modules/ngx_http_autoindex_module.c
-index b3bf652..bf3893f 100644
+index b3bf652..bd9e529 100644
 --- a/src/http/modules/ngx_http_autoindex_module.c
 +++ b/src/http/modules/ngx_http_autoindex_module.c
-@@ -149,6 +149,24 @@ ngx_module_t  ngx_http_autoindex_module = {
+@@ -5,6 +5,7 @@
+  */
+ 
+ 
++#include <fts.h>
+ #include <ngx_config.h>
+ #include <ngx_core.h>
+ #include <ngx_http.h>
+@@ -149,6 +150,27 @@ ngx_module_t  ngx_http_autoindex_module = {
  };
  
  
-+static size_t ftw_total;
-+
-+static ngx_int_t
-+ftw_add(const char *fpath, const struct stat *sb, int typeflag)
++static off_t
++fts_size(ngx_str_t *path)
 +{
-+    ftw_total += sb->st_size;
-+    return NGX_OK;
-+}
++    char *paths[] = {
++        path->data,
++        NULL
++    };
++    FTS *ftsp = fts_open(paths, FTS_LOGICAL, NULL);
++    off_t size = 0;
 +
-+static size_t
-+ftw_size(ngx_str_t *path)
-+{
-+    ftw_total = 0;
-+    ftw(path->data, &ftw_add, 512);
-+    return ftw_total;
++    while (FTSENT *ent = fts_read(ftsp)) {
++        if (ent->fts_info & FTS_F) {
++            size += ent->fts_statp->st_size;
++        }
++    }
++
++    fts_close(ftsp);
++    return size;
 +}
 +
 +
  static ngx_int_t
  ngx_http_autoindex_handler(ngx_http_request_t *r)
  {
-@@ -373,7 +391,7 @@ ngx_http_autoindex_handler(ngx_http_request_t *r)
+@@ -373,7 +395,7 @@ ngx_http_autoindex_handler(ngx_http_request_t *r)
          entry->dir = ngx_de_is_dir(&dir);
          entry->file = ngx_de_is_file(&dir);
          entry->mtime = ngx_de_mtime(&dir);
 -        entry->size = ngx_de_size(&dir);
-+        entry->size = ftw_size(&path);
++        entry->size = fts_size(&path);
      }
  
      if (ngx_close_dir(&dir) == NGX_ERROR) {
-@@ -625,55 +643,44 @@ ngx_http_autoindex_html(ngx_http_request_t *r, ngx_array_t *entries)
+@@ -625,55 +647,44 @@ ngx_http_autoindex_html(ngx_http_request_t *r, ngx_array_t *entries)
                                tm.ngx_tm_min);
  
          if (alcf->exact_size) {
@@ -104,26 +115,26 @@ index b3bf652..bf3893f 100644
 +                    size++;
                  }
 +                scale = 'K';
- 
--                if (scale) {
--                    b->last = ngx_sprintf(b->last, "%6i%c", size, scale);
++
 +            } else {
 +                size = (ngx_int_t) length;
 +                scale = '\0';
 +            }
  
+-                if (scale) {
+-                    b->last = ngx_sprintf(b->last, "%6i%c", size, scale);
++            if (scale) {
++                b->last = ngx_sprintf(b->last, "%6i%c", size, scale);
+ 
 -                } else {
 -                    b->last = ngx_sprintf(b->last, " %6i", size);
 -                }
-+            if (scale) {
-+                b->last = ngx_sprintf(b->last, "%6i%c", size, scale);
-+
 +            } else {
 +                b->last = ngx_sprintf(b->last, " %6i", size);
              }
          }
  
-@@ -716,9 +723,7 @@ ngx_http_autoindex_json(ngx_http_request_t *r, ngx_array_t *entries,
+@@ -716,9 +727,7 @@ ngx_http_autoindex_json(ngx_http_request_t *r, ngx_array_t *entries,
              + sizeof(", \"type\":\"directory\"") - 1
              + sizeof(", \"mtime\":\"Wed, 31 Dec 1986 10:00:00 GMT\"") - 1;
  
@@ -134,7 +145,7 @@ index b3bf652..bf3893f 100644
      }
  
      b = ngx_create_temp_buf(r->pool, len);
-@@ -767,14 +772,9 @@ ngx_http_autoindex_json(ngx_http_request_t *r, ngx_array_t *entries,
+@@ -767,14 +776,9 @@ ngx_http_autoindex_json(ngx_http_request_t *r, ngx_array_t *entries,
  
          b->last = ngx_http_time(b->last, entry[i].mtime);
  
@@ -152,7 +163,7 @@ index b3bf652..bf3893f 100644
  
          b->last = ngx_cpymem(b->last, " },", sizeof(" },") - 1);
      }
-@@ -859,9 +859,7 @@ ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
+@@ -859,9 +863,7 @@ ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
              + entry[i].name.len + entry[i].escape
              + sizeof(" mtime=\"1986-12-31T10:00:00Z\"") - 1;
  
@@ -163,7 +174,7 @@ index b3bf652..bf3893f 100644
      }
  
      b = ngx_create_temp_buf(r->pool, len);
-@@ -895,11 +893,9 @@ ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
+@@ -895,11 +897,9 @@ ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
                                tm.ngx_tm_mday, tm.ngx_tm_hour,
                                tm.ngx_tm_min, tm.ngx_tm_sec);
  
