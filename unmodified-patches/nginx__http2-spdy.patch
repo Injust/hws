@@ -6184,7 +6184,7 @@ index 0000000..5242322
 +
 +#endif /* _NGX_HTTP_SPDY_MODULE_H_INCLUDED_ */
 diff --git a/src/http/ngx_http_upstream.c b/src/http/ngx_http_upstream.c
-index 73a5882..4384a6c 100644
+index 2ea521b..3d9b8c3 100644
 --- a/src/http/ngx_http_upstream.c
 +++ b/src/http/ngx_http_upstream.c
 @@ -514,6 +514,12 @@ ngx_http_upstream_init(ngx_http_request_t *r)
@@ -6200,7 +6200,7 @@ index 73a5882..4384a6c 100644
  
      if (c->read->timer_set) {
          ngx_del_timer(c->read);
-@@ -1317,6 +1323,11 @@ ngx_http_upstream_check_broken_connection(ngx_http_request_t *r,
+@@ -1328,6 +1334,11 @@ ngx_http_upstream_check_broken_connection(ngx_http_request_t *r,
          return;
      }
  #endif

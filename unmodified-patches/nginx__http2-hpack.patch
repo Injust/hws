@@ -122,19 +122,19 @@ index 54e867d..322b3df 100644
  
  #endif /* _NGX_MURMURHASH_H_INCLUDED_ */
 diff --git a/src/http/v2/ngx_http_v2.c b/src/http/v2/ngx_http_v2.c
-index 7725616..db5e46b 100644
+index 2c62190..c8d1d23 100644
 --- a/src/http/v2/ngx_http_v2.c
 +++ b/src/http/v2/ngx_http_v2.c
-@@ -245,6 +245,8 @@ ngx_http_v2_init(ngx_event_t *rev)
+@@ -247,6 +247,8 @@ ngx_http_v2_init(ngx_event_t *rev)
  
-     h2c->frame_size = NGX_HTTP_V2_DEFAULT_FRAME_SIZE;
+     h2c->table_update = 1;
  
 +    h2c->max_hpack_table_size = NGX_HTTP_V2_DEFAULT_HPACK_TABLE_SIZE;
 +
      h2scf = ngx_http_get_module_srv_conf(hc->conf_ctx, ngx_http_v2_module);
  
      h2c->pool = ngx_create_pool(h2scf->pool_size, h2c->connection->log);
-@@ -2018,6 +2020,17 @@ ngx_http_v2_state_settings_params(ngx_http_v2_connection_t *h2c, u_char *pos,
+@@ -2020,6 +2022,17 @@ ngx_http_v2_state_settings_params(ngx_http_v2_connection_t *h2c, u_char *pos,
              h2c->frame_size = value;
              break;
  
@@ -153,7 +153,7 @@ index 7725616..db5e46b 100644
              break;
          }
 diff --git a/src/http/v2/ngx_http_v2.h b/src/http/v2/ngx_http_v2.h
-index 4804658..774abe8 100644
+index 42e0eb1..685a7e3 100644
 --- a/src/http/v2/ngx_http_v2.h
 +++ b/src/http/v2/ngx_http_v2.h
 @@ -49,6 +49,13 @@
@@ -226,8 +226,8 @@ index 4804658..774abe8 100644
      ngx_queue_t                      waiting;
  
      ngx_http_v2_state_t              state;
-@@ -146,6 +195,11 @@ struct ngx_http_v2_connection_s {
-     unsigned                         settings_ack:1;
+@@ -147,6 +196,11 @@ struct ngx_http_v2_connection_s {
+     unsigned                         table_update:1;
      unsigned                         blocked:1;
      unsigned                         goaway:1;
 +    unsigned                         indicate_resize:1;
@@ -238,7 +238,7 @@ index 4804658..774abe8 100644
  };
  
  
-@@ -347,4 +401,31 @@ size_t ngx_http_v2_huff_encode(u_char *src, size_t len, u_char *dst,
+@@ -348,4 +402,31 @@ size_t ngx_http_v2_huff_encode(u_char *src, size_t len, u_char *dst,
  
  #define ngx_http_v2_write_sid  ngx_http_v2_write_uint32
  
@@ -271,7 +271,7 @@ index 4804658..774abe8 100644
 +
  #endif /* _NGX_HTTP_V2_H_INCLUDED_ */
 diff --git a/src/http/v2/ngx_http_v2_filter_module.c b/src/http/v2/ngx_http_v2_filter_module.c
-index 8621e7a..6ce17dd 100644
+index 9070785..3cb0aa2 100644
 --- a/src/http/v2/ngx_http_v2_filter_module.c
 +++ b/src/http/v2/ngx_http_v2_filter_module.c
 @@ -25,11 +25,6 @@
@@ -297,7 +297,7 @@ index 8621e7a..6ce17dd 100644
  static ngx_http_v2_out_frame_t *ngx_http_v2_create_headers_frame(
      ngx_http_request_t *r, u_char *pos, u_char *end, ngx_uint_t fin);
  static ngx_http_v2_out_frame_t *ngx_http_v2_create_trailers_frame(
-@@ -142,6 +133,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
+@@ -143,6 +134,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
      ngx_http_core_loc_conf_t  *clcf;
      ngx_http_core_srv_conf_t  *cscf;
      u_char                     addr[NGX_SOCKADDR_STRLEN];
@@ -305,7 +305,7 @@ index 8621e7a..6ce17dd 100644
  
      static const u_char nginx[5] = "\x84\xaa\x63\x55\xe7";
  #if (NGX_HTTP_GZIP)
-@@ -150,11 +142,9 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
+@@ -151,11 +143,9 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
  #endif
  
      static size_t nginx_ver_len = ngx_http_v2_literal_size(NGINX_VER);
@@ -317,7 +317,7 @@ index 8621e7a..6ce17dd 100644
  
      if (!r->stream) {
          return ngx_http_next_header_filter(r);
-@@ -415,7 +405,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
+@@ -420,7 +410,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
      }
  
      tmp = ngx_palloc(r->pool, tmp_len);
@@ -326,9 +326,9 @@ index 8621e7a..6ce17dd 100644
  
      if (pos == NULL || tmp == NULL) {
          return NGX_ERROR;
-@@ -423,6 +413,18 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
- 
-     start = pos;
+@@ -435,6 +425,18 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
+         h2c->table_update = 0;
+     }
  
 +    h2c = r->stream->connection;
 +
@@ -345,7 +345,7 @@ index 8621e7a..6ce17dd 100644
      ngx_log_debug1(NGX_LOG_DEBUG_HTTP, fc->log, 0,
                     "http2 output header: \":status: %03ui\"",
                     r->headers_out.status);
-@@ -431,67 +433,28 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
+@@ -443,67 +445,28 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
          *pos++ = status;
  
      } else {
@@ -359,24 +359,26 @@ index 8621e7a..6ce17dd 100644
  
      if (r->headers_out.server == NULL) {
 -
--        if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON) {
+         if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON) {
 -            ngx_log_debug1(NGX_LOG_DEBUG_HTTP, fc->log, 0,
 -                           "http2 output header: \"server: %s\"",
 -                           NGINX_VER);
--
--        } else if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_BUILD) {
++            pos = ngx_http_v2_write_header_str("server", NGINX_VER);
+ 
+         } else if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_BUILD) {
 -            ngx_log_debug1(NGX_LOG_DEBUG_HTTP, fc->log, 0,
 -                           "http2 output header: \"server: %s\"",
 -                           NGINX_VER_BUILD);
--
--        } else {
++            pos = ngx_http_v2_write_header_str("server", NGINX_VER_BUILD);
+ 
+         } else {
 -            ngx_log_debug0(NGX_LOG_DEBUG_HTTP, fc->log, 0,
 -                           "http2 output header: \"server: nginx\"");
 -        }
 -
 -        *pos++ = ngx_http_v2_inc_indexed(NGX_HTTP_V2_SERVER_INDEX);
 -
-         if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON) {
+-        if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON) {
 -            if (nginx_ver[0] == '\0') {
 -                p = ngx_http_v2_write_value(nginx_ver, (u_char *) NGINX_VER,
 -                                            sizeof(NGINX_VER) - 1, tmp);
@@ -384,9 +386,8 @@ index 8621e7a..6ce17dd 100644
 -            }
 -
 -            pos = ngx_cpymem(pos, nginx_ver, nginx_ver_len);
-+            pos = ngx_http_v2_write_header_str("server", NGINX_VER);
- 
-         } else if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_BUILD) {
+-
+-        } else if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_BUILD) {
 -            if (nginx_ver_build[0] == '\0') {
 -                p = ngx_http_v2_write_value(nginx_ver_build,
 -                                            (u_char *) NGINX_VER_BUILD,
@@ -395,9 +396,8 @@ index 8621e7a..6ce17dd 100644
 -            }
 -
 -            pos = ngx_cpymem(pos, nginx_ver_build, nginx_ver_build_len);
-+            pos = ngx_http_v2_write_header_str("server", NGINX_VER_BUILD);
- 
-         } else {
+-
+-        } else {
 -            pos = ngx_cpymem(pos, nginx, sizeof(nginx));
 +            pos = ngx_http_v2_write_header_str("server", "nginx");
          }
@@ -420,7 +420,7 @@ index 8621e7a..6ce17dd 100644
          if (r->headers_out.content_type_len == r->headers_out.content_type.len
              && r->headers_out.charset.len)
          {
-@@ -517,64 +480,36 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
+@@ -529,64 +492,36 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
              r->headers_out.content_type.data = p - len;
          }
  
@@ -497,17 +497,14 @@ index 8621e7a..6ce17dd 100644
      }
  #endif
  
-@@ -597,23 +532,10 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
+@@ -609,23 +544,10 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
              continue;
          }
  
 -#if (NGX_DEBUG)
 -        if (fc->log->log_level & NGX_LOG_DEBUG_HTTP) {
 -            ngx_strlow(tmp, header[i].key.data, header[i].key.len);
-+        pos = ngx_http_v2_write_header(h2c, pos, header[i].key.data,
-+                                       header[i].key.len, header[i].value.data,
-+                                       header[i].value.len, tmp);
- 
+-
 -            ngx_log_debug3(NGX_LOG_DEBUG_HTTP, fc->log, 0,
 -                           "http2 output header: \"%*s: %V\"",
 -                           header[i].key.len, tmp, &header[i].value);
@@ -515,7 +512,10 @@ index 8621e7a..6ce17dd 100644
 -#endif
 -
 -        *pos++ = 0;
--
++        pos = ngx_http_v2_write_header(h2c, pos, header[i].key.data,
++                                       header[i].key.len, header[i].value.data,
++                                       header[i].value.len, tmp);
+ 
 -        pos = ngx_http_v2_write_name(pos, header[i].key.data,
 -                                     header[i].key.len, tmp);
 -
@@ -524,7 +524,7 @@ index 8621e7a..6ce17dd 100644
      }
  
      frame = ngx_http_v2_create_headers_frame(r, start, pos, r->header_only);
-@@ -752,7 +674,7 @@ ngx_http_v2_create_trailers_frame(ngx_http_request_t *r)
+@@ -764,7 +686,7 @@ ngx_http_v2_create_trailers_frame(ngx_http_request_t *r)
  }
  
  
@@ -533,7 +533,7 @@ index 8621e7a..6ce17dd 100644
  ngx_http_v2_string_encode(u_char *dst, u_char *src, size_t len, u_char *tmp,
      ngx_uint_t lower)
  {
-@@ -778,7 +700,7 @@ ngx_http_v2_string_encode(u_char *dst, u_char *src, size_t len, u_char *tmp,
+@@ -790,7 +712,7 @@ ngx_http_v2_string_encode(u_char *dst, u_char *src, size_t len, u_char *tmp,
  }
  
  
@@ -543,7 +543,7 @@ index 8621e7a..6ce17dd 100644
  {
      if (value < prefix) {
 diff --git a/src/http/v2/ngx_http_v2_table.c b/src/http/v2/ngx_http_v2_table.c
-index a73748a..ed64d40 100644
+index 62025c4..4ccaa4a 100644
 --- a/src/http/v2/ngx_http_v2_table.c
 +++ b/src/http/v2/ngx_http_v2_table.c
 @@ -347,3 +347,434 @@ ngx_http_v2_table_size(ngx_http_v2_connection_t *h2c, size_t size)

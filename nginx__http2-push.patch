@@ -1,5 +1,5 @@
 diff --git a/src/http/v2/ngx_http_v2.c b/src/http/v2/ngx_http_v2.c
-index db5e46b..e144d30 100644
+index c8d1d23..39c7a2d 100644
 --- a/src/http/v2/ngx_http_v2.c
 +++ b/src/http/v2/ngx_http_v2.c
 @@ -41,6 +41,7 @@
@@ -10,7 +10,7 @@ index db5e46b..e144d30 100644
  #define NGX_HTTP_V2_MAX_STREAMS_SETTING          0x3
  #define NGX_HTTP_V2_INIT_WINDOW_SIZE_SETTING     0x4
  #define NGX_HTTP_V2_MAX_FRAME_SIZE_SETTING       0x5
-@@ -247,6 +248,9 @@ ngx_http_v2_init(ngx_event_t *rev)
+@@ -249,6 +250,9 @@ ngx_http_v2_init(ngx_event_t *rev)
  
      h2c->max_hpack_table_size = NGX_HTTP_V2_DEFAULT_HPACK_TABLE_SIZE;
  
@@ -20,7 +20,7 @@ index db5e46b..e144d30 100644
      h2scf = ngx_http_get_module_srv_conf(hc->conf_ctx, ngx_http_v2_module);
  
      h2c->pool = ngx_create_pool(h2scf->pool_size, h2c->connection->log);
-@@ -2031,6 +2035,19 @@ ngx_http_v2_state_settings_params(ngx_http_v2_connection_t *h2c, u_char *pos,
+@@ -2033,6 +2037,19 @@ ngx_http_v2_state_settings_params(ngx_http_v2_connection_t *h2c, u_char *pos,
              h2c->indicate_resize = 1;
              break;
  
@@ -41,7 +41,7 @@ index db5e46b..e144d30 100644
              break;
          }
 diff --git a/src/http/v2/ngx_http_v2.h b/src/http/v2/ngx_http_v2.h
-index 774abe8..c41d277 100644
+index 685a7e3..99257c2 100644
 --- a/src/http/v2/ngx_http_v2.h
 +++ b/src/http/v2/ngx_http_v2.h
 @@ -12,6 +12,7 @@
@@ -52,7 +52,7 @@ index 774abe8..c41d277 100644
  
  #define NGX_HTTP_V2_ALPN_ADVERTISE       "\x02h2"
  #define NGX_HTTP_V2_NPN_ADVERTISE        NGX_HTTP_V2_ALPN_ADVERTISE
-@@ -190,11 +191,15 @@ struct ngx_http_v2_connection_s {
+@@ -190,12 +191,16 @@ struct ngx_http_v2_connection_s {
      ngx_queue_t                      closed;
  
      ngx_uint_t                       last_sid;
@@ -62,6 +62,7 @@ index 774abe8..c41d277 100644
  
      unsigned                         closed_nodes:8;
      unsigned                         settings_ack:1;
+     unsigned                         table_update:1;
      unsigned                         blocked:1;
      unsigned                         goaway:1;
 +    unsigned                         enable_push:1;
