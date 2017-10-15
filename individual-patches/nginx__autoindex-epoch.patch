@@ -1,0 +1,84 @@
+diff --git a/src/http/modules/ngx_http_autoindex_module.c b/src/http/modules/ngx_http_autoindex_module.c
+index b3bf652..a031a5f 100644
+--- a/src/http/modules/ngx_http_autoindex_module.c
++++ b/src/http/modules/ngx_http_autoindex_module.c
+@@ -431,7 +431,6 @@ ngx_http_autoindex_html(ngx_http_request_t *r, ngx_array_t *entries)
+     u_char                         *last, scale;
+     off_t                           length;
+     size_t                          len, char_len, escape_html;
+-    ngx_tm_t                        tm;
+     ngx_buf_t                      *b;
+     ngx_int_t                       size;
+     ngx_uint_t                      i, utf8;
+@@ -615,21 +614,14 @@ ngx_http_autoindex_html(ngx_http_request_t *r, ngx_array_t *entries)
+ 
+         *b->last++ = ' ';
+ 
+-        ngx_gmtime(entry[i].mtime + tp->gmtoff * 60 * alcf->localtime, &tm);
+-
+-        b->last = ngx_sprintf(b->last, "%02d-%s-%d %02d:%02d ",
+-                              tm.ngx_tm_mday,
+-                              months[tm.ngx_tm_mon - 1],
+-                              tm.ngx_tm_year,
+-                              tm.ngx_tm_hour,
+-                              tm.ngx_tm_min);
++        b->last = ngx_sprintf(b->last, "%17O", entry[i].mtime);
+ 
+         if (alcf->exact_size) {
+             if (entry[i].dir) {
+-                b->last = ngx_cpymem(b->last,  "                  -",
+-                                     sizeof("                  -") - 1);
++                b->last = ngx_cpymem(b->last,  "                   -",
++                                     sizeof("                   -") - 1);
+             } else {
+-                b->last = ngx_sprintf(b->last, "%19O", entry[i].size);
++                b->last = ngx_sprintf(b->last, "%20O", entry[i].size);
+             }
+ 
+         } else {
+@@ -762,18 +754,16 @@ ngx_http_autoindex_json(ngx_http_request_t *r, ngx_array_t *entries,
+             b->last = ngx_cpymem(b->last, "other", sizeof("other") - 1);
+         }
+ 
+-        b->last = ngx_cpymem(b->last, "\", \"mtime\":\"",
+-                             sizeof("\", \"mtime\":\"") - 1);
++        b->last = ngx_cpymem(b->last, "\", \"mtime\":",
++                             sizeof("\", \"mtime\":") - 1);
+ 
+-        b->last = ngx_http_time(b->last, entry[i].mtime);
++        b->last = ngx_sprintf(b->last, "%O", entry[i].mtime);
+ 
+         if (entry[i].file) {
+-            b->last = ngx_cpymem(b->last, "\", \"size\":",
+-                                 sizeof("\", \"size\":") - 1);
++            b->last = ngx_cpymem(b->last, ", \"size\":",
++                                 sizeof(", \"size\":") - 1);
+             b->last = ngx_sprintf(b->last, "%O", entry[i].size);
+ 
+-        } else {
+-            *b->last++ = '"';
+         }
+ 
+         b->last = ngx_cpymem(b->last, " },", sizeof(" },") - 1);
+@@ -838,7 +828,6 @@ static ngx_buf_t *
+ ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
+ {
+     size_t                          len;
+-    ngx_tm_t                        tm;
+     ngx_buf_t                      *b;
+     ngx_str_t                       type;
+     ngx_uint_t                      i;
+@@ -888,12 +877,7 @@ ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
+ 
+         b->last = ngx_cpymem(b->last, " mtime=\"", sizeof(" mtime=\"") - 1);
+ 
+-        ngx_gmtime(entry[i].mtime, &tm);
+-
+-        b->last = ngx_sprintf(b->last, "%4d-%02d-%02dT%02d:%02d:%02dZ",
+-                              tm.ngx_tm_year, tm.ngx_tm_mon,
+-                              tm.ngx_tm_mday, tm.ngx_tm_hour,
+-                              tm.ngx_tm_min, tm.ngx_tm_sec);
++        b->last = ngx_sprintf(b->last, "%O", entry[i].mtime);
+ 
+         if (entry[i].file) {
+             b->last = ngx_cpymem(b->last, "\" size=\"",
