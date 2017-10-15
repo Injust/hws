@@ -138,8 +138,6 @@ package() {
 	install -Dm644 ../logrotate "$pkgdir"/etc/logrotate.d/hws
 	install -Dm644 ../service "$pkgdir"/usr/lib/systemd/system/hws.service
 
-	install -dm700 -ghttp -ohttp "$pkgdir"/var/cache/hws "$pkgdir"/var/lib/hws/body "$pkgdir"/var/lib/hws/proxy "$pkgdir"/var/log/hws
-
 	for i in contrib/vim/*; do
 		install -Dm644 $i/nginx.vim "$pkgdir"/usr/share/vim/vimfiles/$i##*//nginx.vim
 	done
