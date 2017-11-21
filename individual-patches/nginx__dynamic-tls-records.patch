@@ -63,10 +63,10 @@ index 88a6dbe..b2b7a5f 100644
  
              c->read->handler = c->ssl->saved_read_handler;
 diff --git a/src/event/ngx_event_openssl.h b/src/event/ngx_event_openssl.h
-index b9a3a96..93e45ad 100644
+index 623d851..9996e47 100644
 --- a/src/event/ngx_event_openssl.h
 +++ b/src/event/ngx_event_openssl.h
-@@ -59,10 +59,19 @@
+@@ -60,10 +60,19 @@
  #endif
  
  
@@ -86,7 +86,7 @@ index b9a3a96..93e45ad 100644
  };
  
  
-@@ -85,6 +94,10 @@ struct ngx_ssl_connection_s {
+@@ -86,6 +95,10 @@ struct ngx_ssl_connection_s {
      unsigned                    no_wait_shutdown:1;
      unsigned                    no_send_shutdown:1;
      unsigned                    handshake_buffer_set:1;
@@ -97,7 +97,7 @@ index b9a3a96..93e45ad 100644
  };
  
  
-@@ -94,7 +107,7 @@ struct ngx_ssl_connection_s {
+@@ -95,7 +108,7 @@ struct ngx_ssl_connection_s {
  #define NGX_SSL_DFLT_BUILTIN_SCACHE  -5
  
  

@@ -381,7 +381,7 @@ index a6128b5..5eba4f9 100644
  };
  
 diff --git a/src/http/ngx_http_request.c b/src/http/ngx_http_request.c
-index de1b202..322b30c 100644
+index 5668bf4..f0a1ad6 100644
 --- a/src/http/ngx_http_request.c
 +++ b/src/http/ngx_http_request.c
 @@ -319,6 +319,11 @@ ngx_http_init_connection(ngx_connection_t *c)
@@ -431,7 +431,7 @@ index de1b202..322b30c 100644
          c->log->action = "waiting for request";
  
          c->read->handler = ngx_http_wait_request_handler;
-@@ -2573,6 +2606,12 @@ ngx_http_finalize_connection(ngx_http_request_t *r)
+@@ -2580,6 +2613,12 @@ ngx_http_finalize_connection(ngx_http_request_t *r)
          return;
      }
  #endif
@@ -444,7 +444,7 @@ index de1b202..322b30c 100644
  
      clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
  
-@@ -2781,6 +2820,18 @@ ngx_http_test_reading(ngx_http_request_t *r)
+@@ -2788,6 +2827,18 @@ ngx_http_test_reading(ngx_http_request_t *r)
          return;
      }
  
@@ -463,7 +463,7 @@ index de1b202..322b30c 100644
  #endif
  
  #if (NGX_HAVE_KQUEUE)
-@@ -3445,6 +3496,12 @@ ngx_http_close_request(ngx_http_request_t *r, ngx_int_t rc)
+@@ -3452,6 +3503,12 @@ ngx_http_close_request(ngx_http_request_t *r, ngx_int_t rc)
          return;
      }
  #endif
@@ -6184,7 +6184,7 @@ index 0000000..5242322
 +
 +#endif /* _NGX_HTTP_SPDY_MODULE_H_INCLUDED_ */
 diff --git a/src/http/ngx_http_upstream.c b/src/http/ngx_http_upstream.c
-index 2ea521b..3d9b8c3 100644
+index 75f463b..03c9db0 100644
 --- a/src/http/ngx_http_upstream.c
 +++ b/src/http/ngx_http_upstream.c
 @@ -514,6 +514,12 @@ ngx_http_upstream_init(ngx_http_request_t *r)
