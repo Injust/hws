@@ -309,7 +309,7 @@ index afab4f6..7b70426 100644
  #include <ngx_http_cache.h>
  #endif
 diff --git a/src/http/ngx_http_core_module.c b/src/http/ngx_http_core_module.c
-index 57a4742..9ae0a06 100644
+index 5951571..1d60d82 100644
 --- a/src/http/ngx_http_core_module.c
 +++ b/src/http/ngx_http_core_module.c
 @@ -1933,6 +1933,13 @@ ngx_http_gzip_ok(ngx_http_request_t *r)
@@ -336,7 +336,7 @@ index 57a4742..9ae0a06 100644
  
      sr->method = NGX_HTTP_GET;
      sr->http_version = r->http_version;
-@@ -3964,11 +3974,15 @@ ngx_http_core_listen(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+@@ -3965,11 +3975,15 @@ ngx_http_core_listen(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
          }
  
          if (ngx_strcmp(value[n].data, "spdy") == 0) {
@@ -6184,7 +6184,7 @@ index 0000000..5242322
 +
 +#endif /* _NGX_HTTP_SPDY_MODULE_H_INCLUDED_ */
 diff --git a/src/http/ngx_http_upstream.c b/src/http/ngx_http_upstream.c
-index 75f463b..03c9db0 100644
+index f8d5707..cb390eb 100644
 --- a/src/http/ngx_http_upstream.c
 +++ b/src/http/ngx_http_upstream.c
 @@ -514,6 +514,12 @@ ngx_http_upstream_init(ngx_http_request_t *r)

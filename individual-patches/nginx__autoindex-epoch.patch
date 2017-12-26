@@ -1,8 +1,8 @@
 diff --git a/src/http/modules/ngx_http_autoindex_module.c b/src/http/modules/ngx_http_autoindex_module.c
-index b3bf652..a031a5f 100644
+index 94b91db..d5915e1 100644
 --- a/src/http/modules/ngx_http_autoindex_module.c
 +++ b/src/http/modules/ngx_http_autoindex_module.c
-@@ -431,7 +431,6 @@ ngx_http_autoindex_html(ngx_http_request_t *r, ngx_array_t *entries)
+@@ -437,7 +437,6 @@ ngx_http_autoindex_html(ngx_http_request_t *r, ngx_array_t *entries)
      u_char                         *last, scale;
      off_t                           length;
      size_t                          len, char_len, escape_html;
@@ -10,7 +10,7 @@ index b3bf652..a031a5f 100644
      ngx_buf_t                      *b;
      ngx_int_t                       size;
      ngx_uint_t                      i, utf8;
-@@ -615,21 +614,14 @@ ngx_http_autoindex_html(ngx_http_request_t *r, ngx_array_t *entries)
+@@ -621,21 +620,14 @@ ngx_http_autoindex_html(ngx_http_request_t *r, ngx_array_t *entries)
  
          *b->last++ = ' ';
  
@@ -36,7 +36,7 @@ index b3bf652..a031a5f 100644
              }
  
          } else {
-@@ -762,18 +754,16 @@ ngx_http_autoindex_json(ngx_http_request_t *r, ngx_array_t *entries,
+@@ -768,18 +760,16 @@ ngx_http_autoindex_json(ngx_http_request_t *r, ngx_array_t *entries,
              b->last = ngx_cpymem(b->last, "other", sizeof("other") - 1);
          }
  
@@ -60,7 +60,7 @@ index b3bf652..a031a5f 100644
          }
  
          b->last = ngx_cpymem(b->last, " },", sizeof(" },") - 1);
-@@ -838,7 +828,6 @@ static ngx_buf_t *
+@@ -844,7 +834,6 @@ static ngx_buf_t *
  ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
  {
      size_t                          len;
@@ -68,7 +68,7 @@ index b3bf652..a031a5f 100644
      ngx_buf_t                      *b;
      ngx_str_t                       type;
      ngx_uint_t                      i;
-@@ -888,12 +877,7 @@ ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
+@@ -894,12 +883,7 @@ ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
  
          b->last = ngx_cpymem(b->last, " mtime=\"", sizeof(" mtime=\"") - 1);
  
