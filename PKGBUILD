@@ -14,7 +14,7 @@ sha384sums=(
 	SKIP
 	SKIP
 	9ebf7f2f381c6e6c534962e427bb77a4f54e8017b3eb4dce42a36bf1599cf3fe54867d0bbca308fff34ff86a13a43dba
-	7bcfc01271fedb2aa1da0602136193562bf45db91578763f1e675604897ddafe3764a0ae9df16198df7c2ccd28d73162
+	0f62be93959eb5df320c9018a0bac69c6f8a167bf838f303751190be10a06384ae10d5726e1fbdec448f1c209d6197c7
 	b504858449fc160b0a2ff1e30e0f226c36c0cd357a647e2cd7da4f43718c79fa3732e130d7d2e337ee2368a03516b5e7
 	4d74cc598faacd64ec90a6d59691ace30bcee62220ee03a5a64901b2fe62e99fe861bb5f9fdc8bb16f7abcfe65815f58
 	46a0bd7d28e7187eb138cc00dcd79caccbe42dba5ca19e07597403a52efb7557ed77944253c92c95a75da94f1856e1d7
@@ -113,11 +113,11 @@ prepare() {
 	cd incubator-pagespeed-ngx-latest-beta
 	curl "$(scripts/format_binary_url.sh PSOL_BINARY_URL)" | tar xz
 
-	cd ../nginx-$pkgver
-	cat ../nginx__*.patch | patch -p1
-
 	cd ../ngx_brotli
 	git submodule update --init
+
+	cd ../nginx-$pkgver
+	cat ../nginx__*.patch | patch -p1
 
 	cd ../openssl-$opensslver
 	cat ../openssl__*.patch | patch -p1
