@@ -14,7 +14,7 @@ sha384sums=(
 	SKIP
 	SKIP
 	9ebf7f2f381c6e6c534962e427bb77a4f54e8017b3eb4dce42a36bf1599cf3fe54867d0bbca308fff34ff86a13a43dba
-	510e43f78819ebe7be86cbe47dbdc22002d9045a285fba31df48faeaaf925215dd58200d267b9aa8be372a52a27cbf50
+	7bcfc01271fedb2aa1da0602136193562bf45db91578763f1e675604897ddafe3764a0ae9df16198df7c2ccd28d73162
 	b504858449fc160b0a2ff1e30e0f226c36c0cd357a647e2cd7da4f43718c79fa3732e130d7d2e337ee2368a03516b5e7
 	4d74cc598faacd64ec90a6d59691ace30bcee62220ee03a5a64901b2fe62e99fe861bb5f9fdc8bb16f7abcfe65815f58
 	46a0bd7d28e7187eb138cc00dcd79caccbe42dba5ca19e07597403a52efb7557ed77944253c92c95a75da94f1856e1d7
@@ -34,7 +34,7 @@ source=(
 	git+https://github.com/ghedo/http2-push-nginx-module
 	git+https://github.com/google/ngx_brotli.git
 	https://caddyserver.com/download/linux/amd64?license=personal
-	https://codeload.github.com/pagespeed/ngx_pagespeed/tar.gz/latest-beta
+	https://codeload.github.com/apache/incubator-pagespeed-ngx/tar.gz/latest-beta
 	https://nginx.org/download/nginx-$pkgver.tar.gz
 	https://www.openssl.org/source/openssl-$opensslver.tar.gz
 	logrotate
@@ -52,8 +52,8 @@ source=(
 
 _build_parameters=(
 	--add-module=../http2-push-nginx-module
+	--add-module=../incubator-pagespeed-ngx-latest-beta
 	--add-module=../ngx_brotli
-	--add-module=../ngx_pagespeed-latest-beta
 	--conf-path=/etc/hws/nginx.conf
 	--error-log-path=stderr
 	--http-client-body-temp-path=/var/lib/hws/body
@@ -110,14 +110,14 @@ _build_parameters=(
 )
 
 prepare() {
-	cd ngx_brotli
-	git submodule update --init
-
-	cd ../ngx_pagespeed-latest-beta
+	cd incubator-pagespeed-ngx-latest-beta
 	curl "$(scripts/format_binary_url.sh PSOL_BINARY_URL)" | tar xz
 
 	cd ../nginx-$pkgver
 	cat ../nginx__*.patch | patch -p1
+
+	cd ../ngx_brotli
+	git submodule update --init
 
 	cd ../openssl-$opensslver
 	cat ../openssl__*.patch | patch -p1
