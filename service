@@ -21,7 +21,7 @@ ExecStart=/bin/bash -c "hws-nginx & hws-caddy -conf=/etc/hws/Caddyfile -quic &"
 ExecReload=/usr/bin/hws-nginx -s reload
 ExecReload=/usr/bin/pkill -USR1 -x hws-caddy
 ExecStop=/usr/bin/hws-nginx -s stop
-ExecStop=/usr/bin/pkill -QUIT -x hws-caddy
+ExecStop=/usr/bin/pkill -x hws-caddy
 
 PrivateDevices=true
 PrivateTmp=true
