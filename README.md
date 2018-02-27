@@ -1,2 +1,2 @@
 # hws
-Hydronium Web Server
+Hydronium web server
