@@ -12,7 +12,6 @@ provides=(caddy nginx)
 
 sha384sums=(
 	SKIP
-	SKIP
 	224ffcdfe6e9f02f71d945352dfb936c276ec738c1bf252e435304683cabaa8479e6190a74876de2008b9c302708d02f
 	0f62be93959eb5df320c9018a0bac69c6f8a167bf838f303751190be10a06384ae10d5726e1fbdec448f1c209d6197c7
 	b504858449fc160b0a2ff1e30e0f226c36c0cd357a647e2cd7da4f43718c79fa3732e130d7d2e337ee2368a03516b5e7
@@ -23,14 +22,12 @@ sha384sums=(
 	bdcabfa111bb89e5a64376c05e27c0752602b321796a4e7b221d64694b502a0b3cd65d82fae73381f8112cc5332c0244
 	d66c9b53d50a1cb5a6ef43202f5e14c25998bc4d47fb460be11e2021bb5271bf07f5f473d51918ed7c009478a13704fd
 	e210b79912e808041bdb4114db89b565f900131dac65360f3744399e971bbe7109609163cdc349e67f2d1e71a19395f2
-	a4d6d919af239795e208057863542f2d44f1cb73be22f351727f1ba09d9def103583e8c925aa196a490c8905d69e10b9
 	bdd5219cf7988392ef61958d65555ed0cde3f95948e240b010b0234ccd10b5a3ce66ff1c30d239ab204bfe41266279d7
 	6b679a8f03b9930dc5ebb36a25f4f5d270d5a6118bfc447c77b1f2156ff7d8a25a916992295a98405276e687c321b00d
 	482565b155f5d21b8ed6ef79cc863031378fb86ec172b42570babfa5af1b1f7ef1a10ce35f7fd56e48b787dcc43e8a4e
 )
 
 source=(
-	git+https://github.com/ghedo/http2-push-nginx-module
 	git+https://github.com/google/ngx_brotli.git
 	https://caddyserver.com/download/linux/amd64?license=personal
 	https://codeload.github.com/apache/incubator-pagespeed-ngx/tar.gz/latest-beta
@@ -42,14 +39,12 @@ source=(
 	nginx__autoindex-fts.patch
 	nginx__dynamic-tls-records.patch
 	nginx__http2-hpack.patch
-	nginx__http2-push.patch
 	nginx__server-header.patch
 	openssl__equal-preference.patch
 	service
 )
 
 _build_parameters=(
-	--add-module=../http2-push-nginx-module
 	--add-module=../incubator-pagespeed-ngx-latest-beta
 	--add-module=../ngx_brotli
 	--conf-path=/etc/hws/nginx.conf
