@@ -3,7 +3,6 @@ caddyver=0.10.11
 conflicts=(caddy nginx)
 depends=(pcre zlib)
 makedepends=(git)
-opensslver=1.1.0g
 pkgdesc="Hydronium web server"
 pkgname=hws
 pkgrel=1
@@ -26,7 +25,6 @@ _build_parameters=(
 	--with-http_ssl_module
 	--with-http_v2_hpack_enc
 	--with-http_v2_module
-	--with-openssl=../openssl-$opensslver
 	--with-threads
 	--without-http_access_module
 	--without-http_auth_basic_module
@@ -79,8 +77,6 @@ sha384sums=(
 	f9556d5e1fe8f9745e25685bbe60e075ebd6463923ec476467d630ad7ecfa28b81dec65216f0c4f773a997ac779d301c
 	22a2e24c3bd9aa4e15e828d9d1d0eb670f669640c14481abdb63494a04770f304d7e0a1134ae79658bc2daf8f4793551
 	SKIP
-	4d74cc598faacd64ec90a6d59691ace30bcee62220ee03a5a64901b2fe62e99fe861bb5f9fdc8bb16f7abcfe65815f58
-	6b679a8f03b9930dc5ebb36a25f4f5d270d5a6118bfc447c77b1f2156ff7d8a25a916992295a98405276e687c321b00d
 	edd4a784a34f783ea57a6792c24ab1a6bbf0e8242a5ed1abefbbf5a338f8779f91b1e5bc7ecd348681ece36a7ad43aa7
 )
 
@@ -96,8 +92,6 @@ source=(
 	nginx__http2-hpack.patch
 	nginx__server-header.patch
 	ngx_brotli::git+https://github.com/google/ngx_brotli.git
-	openssl-$opensslver.tar.gz::https://www.openssl.org/source/openssl-$opensslver.tar.gz
-	openssl__equal-preference.patch
 	service
 )
 
@@ -110,9 +104,6 @@ prepare() {
 
 	cd ../nginx-$pkgver
 	cat ../nginx__*.patch | patch -p1
-
-	cd ../openssl-$opensslver
-	cat ../openssl__*.patch | patch -p1
 }
 
 build() {
