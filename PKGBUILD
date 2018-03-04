@@ -1,4 +1,4 @@
-arch=(i686 x86_64)
+arch=(x86_64)
 conflicts=(caddy nginx)
 depends=(pcre zlib)
 makedepends=(git)
