@@ -1,6 +1,6 @@
 [Unit]
 After=network.target
-Description=Hydronium Web Server
+Description=Hydronium web server
 
 [Service]
 Restart=on-failure

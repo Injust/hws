@@ -1,5 +1,5 @@
 pkgname=hws
-pkgdesc="Hydronium Web Server"
+pkgdesc="Hydronium web server"
 
 arch=(i686 x86_64)
 conflicts=(caddy nginx)
