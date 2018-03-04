@@ -1,11 +1,10 @@
-pkgname=hws
-pkgdesc="Hydronium web server"
-
 arch=(i686 x86_64)
 conflicts=(caddy nginx)
 depends=(pcre zlib)
 makedepends=(git)
 opensslver=1.1.0g
+pkgdesc="Hydronium web server"
+pkgname=hws
 pkgrel=1
 pkgver=1.13.9
 provides=(caddy nginx)
