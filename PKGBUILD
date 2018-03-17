@@ -67,7 +67,6 @@ _build_parameters=(
 
 sha384sums=(
 	224ffcdfe6e9f02f71d945352dfb936c276ec738c1bf252e435304683cabaa8479e6190a74876de2008b9c302708d02f
-	edd4a784a34f783ea57a6792c24ab1a6bbf0e8242a5ed1abefbbf5a338f8779f91b1e5bc7ecd348681ece36a7ad43aa7
 	0f62be93959eb5df320c9018a0bac69c6f8a167bf838f303751190be10a06384ae10d5726e1fbdec448f1c209d6197c7
 	46a0bd7d28e7187eb138cc00dcd79caccbe42dba5ca19e07597403a52efb7557ed77944253c92c95a75da94f1856e1d7
 	508e29d01a1859427a5a846a527c3f26580428b3edae1937db688d2c4965977d667c202b13621877cd0a41f5faaf1ae5
@@ -78,11 +77,11 @@ sha384sums=(
 	f9556d5e1fe8f9745e25685bbe60e075ebd6463923ec476467d630ad7ecfa28b81dec65216f0c4f773a997ac779d301c
 	22a2e24c3bd9aa4e15e828d9d1d0eb670f669640c14481abdb63494a04770f304d7e0a1134ae79658bc2daf8f4793551
 	SKIP
+	edd4a784a34f783ea57a6792c24ab1a6bbf0e8242a5ed1abefbbf5a338f8779f91b1e5bc7ecd348681ece36a7ad43aa7
 )
 
 source=(
 	caddy_v${caddyver}_linux_amd64_personal.tar.gz::https://caddyserver.com/download/linux/amd64?license=personal
-	hws.service
 	incubator-pagespeed-ngx-latest-beta.tar.gz::https://codeload.github.com/apache/incubator-pagespeed-ngx/tar.gz/latest-beta
 	logrotate
 	nginx-$pkgver.tar.gz::https://nginx.org/download/nginx-$pkgver.tar.gz
@@ -93,6 +92,7 @@ source=(
 	nginx__http2-hpack.patch
 	nginx__server-header.patch
 	ngx_brotli::git+https://github.com/google/ngx_brotli.git
+	service
 )
 
 prepare() {
