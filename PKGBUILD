@@ -1,30 +1,27 @@
 arch=(x86_64)
-caddyver=0.10.11
-conflicts=(caddy nginx)
-depends=(pcre zlib)
-makedepends=(git make)
-pkgdesc="Hydronium web server"
-pkgname=hws
+depends=(openssl pcre zlib)
+makedepends=(git make patch)
+pkgdesc="Lightweight HTTP server and IMAP/POP3 proxy server"
+pkgname=nginx
 pkgrel=1
 pkgver=1.13.9
-provides=(caddy nginx)
 
 _build_parameters=(
 	--add-module=../incubator-pagespeed-ngx-latest-beta
 	--add-module=../ngx_brotli
-	--conf-path=/etc/hws/nginx.conf
+	--conf-path=/etc/nginx/nginx.conf
 	--error-log-path=stderr
-	--http-client-body-temp-path=/var/lib/hws/body
-	--http-proxy-temp-path=/var/lib/hws/proxy
-	--prefix=/etc/hws
-	--sbin-path=/usr/bin/hws-nginx
+	--http-client-body-temp-path=/var/lib/nginx/client-body
+	--http-proxy-temp-path=/var/lib/nginx/proxy
+	--prefix=/etc/nginx
+	--sbin-path=/usr/bin/nginx
 	--with-cc-opt="-DTCP_FASTOPEN=23"
 	--with-file-aio
-	--with-http_addition_module
 	--with-http_realip_module
 	--with-http_ssl_module
 	--with-http_v2_hpack_enc
 	--with-http_v2_module
+	--with-pcre-jit
 	--with-threads
 	--without-http_access_module
 	--without-http_auth_basic_module
@@ -66,7 +63,6 @@ _build_parameters=(
 )
 
 sha384sums=(
-	224ffcdfe6e9f02f71d945352dfb936c276ec738c1bf252e435304683cabaa8479e6190a74876de2008b9c302708d02f
 	0f62be93959eb5df320c9018a0bac69c6f8a167bf838f303751190be10a06384ae10d5726e1fbdec448f1c209d6197c7
 	46a0bd7d28e7187eb138cc00dcd79caccbe42dba5ca19e07597403a52efb7557ed77944253c92c95a75da94f1856e1d7
 	508e29d01a1859427a5a846a527c3f26580428b3edae1937db688d2c4965977d667c202b13621877cd0a41f5faaf1ae5
@@ -81,10 +77,9 @@ sha384sums=(
 )
 
 source=(
-	caddy_v${caddyver}_linux_amd64_personal.tar.gz::https://caddyserver.com/download/linux/amd64?license=personal
 	incubator-pagespeed-ngx-latest-beta.tar.gz::https://codeload.github.com/apache/incubator-pagespeed-ngx/tar.gz/latest-beta
 	logrotate
-	nginx-$pkgver.tar.gz::https://nginx.org/download/nginx-$pkgver.tar.gz
+	nginx-${pkgver}.tar.gz::https://nginx.org/download/nginx-${pkgver}.tar.gz
 	nginx__204-headers.patch
 	nginx__autoindex-epoch.patch
 	nginx__autoindex-fts.patch
@@ -96,34 +91,33 @@ source=(
 )
 
 prepare() {
-	cd incubator-pagespeed-ngx-latest-beta
+	cd "${srcdir}/incubator-pagespeed-ngx-latest-beta"
 	curl "$(scripts/format_binary_url.sh PSOL_BINARY_URL)" | tar xz
 
-	cd ../ngx_brotli
+	cd "${srcdir}/ngx_brotli"
 	git submodule update --init
 
-	cd ../nginx-$pkgver
-	cat ../nginx__*.patch | patch -p1
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	cat "${srcdir}/${pkgname}__*.patch" | patch -p1
 }
 
 build() {
-	cd nginx-$pkgver
+	cd "${srcdir}/${pkgname}-${pkgver}"
 	./configure ${_build_parameters[@]}
 	make
 }
 
 package() {
-	cd nginx-$pkgver
-	make DESTDIR="$pkgdir" install
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make "DESTDIR=${pkgdir}" install
 
-	chmod 755 "$pkgdir"/usr/bin/hws-nginx
-	rm -r "$pkgdir"/etc/hws
+	chmod 755 "${pkgdir}/usr/bin/nginx"
+	rm -r "${pkgdir}/etc/nginx"
 
-	install -D ../caddy "$pkgdir"/usr/bin/hws-caddy
-	install -Dm644 ../logrotate "$pkgdir"/etc/logrotate.d/hws
-	install -Dm644 ../service "$pkgdir"/usr/lib/systemd/system/hws.service
+	install -Dm644 ../logrotate "${pkgdir/etc/logrotate.d/nginx"
+	install -Dm644 ../service "${pkgdir/usr/lib/systemd/system/nginx.service"
 
-	for i in contrib/vim/*; do
-		install -Dm644 $i/nginx.vim "$pkgdir"/usr/share/vim/vimfiles/$i##*//nginx.vim
+	for _file in contrib/vim/*; do
+		install -Dm644 "${_file}/nginx.vim" "${pkgdir}/usr/share/vim/vimfiles/${_file##*/}/nginx.vim"
 	done
 }
