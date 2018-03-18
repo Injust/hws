@@ -98,7 +98,7 @@ prepare() {
 	git submodule update --init
 
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	cat "${srcdir}/${pkgname}__*.patch" | patch -p1
+	cat "${srcdir}/${pkgname}__"*.patch | patch -p1
 }
 
 build() {
@@ -114,8 +114,8 @@ package() {
 	chmod 755 "${pkgdir}/usr/bin/nginx"
 	rm -r "${pkgdir}/etc/nginx"
 
-	install -Dm644 ../logrotate "${pkgdir/etc/logrotate.d/nginx"
-	install -Dm644 ../service "${pkgdir/usr/lib/systemd/system/nginx.service"
+	install -Dm644 ../logrotate "${pkgdir}/etc/logrotate.d/nginx"
+	install -Dm644 ../service "${pkgdir}/usr/lib/systemd/system/nginx.service"
 
 	for _file in contrib/vim/*; do
 		install -Dm644 "${_file}/nginx.vim" "${pkgdir}/usr/share/vim/vimfiles/${_file##*/}/nginx.vim"
