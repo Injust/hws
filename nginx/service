@@ -8,7 +8,6 @@ KillMode=mixed
 LimitNOFILE=infinity
 PIDFile=/run/nginx/nginx.pid
 Restart=on-failure
-SyslogLevel=err
 Type=forking
 User=http
 
