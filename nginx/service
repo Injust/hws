@@ -5,6 +5,7 @@ Description=A high performance web server and a reverse proxy server
 [Service]
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 KillMode=mixed
+LimitNOFILE=infinity
 PIDFile=/run/nginx/nginx.pid
 Restart=on-failure
 SyslogLevel=err
