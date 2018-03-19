@@ -7,7 +7,7 @@ pkgrel=1
 pkgver=2011.12.20
 provides=(wslay-git)
 
-_build_parameters=(
+_configure_parameters=(
 	--libexecdir=/usr/lib/wslay
 	--localstatedir=/var/lib/wslay
 	--prefix=/usr
@@ -35,7 +35,7 @@ build() {
 	autoreconf -i
 	automake
 	autoconf
-	./configure ${_build_parameters[@]}
+	./configure ${_configure_parameters[@]}
 	make
 }
 

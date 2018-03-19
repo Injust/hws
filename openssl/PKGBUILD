@@ -8,7 +8,7 @@ pkgname=openssl
 pkgrel=1
 pkgver=${opensslver/[a-z]/.${opensslver//[0-9.]/}}
 
-_build_parameters=(
+_configure_parameters=(
 	"-Wa,--noexecstack ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}"
 	--libdir=lib
 	--openssldir=/etc/ssl
@@ -39,7 +39,7 @@ prepare() {
 
 build() {
 	cd "${srcdir}/${pkgname}-${opensslver}"
-	./Configure ${_build_parameters[@]}
+	./Configure ${_configure_parameters[@]}
 	make depend
 	make
 }
