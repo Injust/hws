@@ -92,7 +92,7 @@ source=(
 
 prepare() {
 	cd "${srcdir}/incubator-pagespeed-ngx-latest-beta"
-	curl "$(scripts/format_binary_url.sh PSOL_BINARY_URL)" | tar xz
+	curl "$("${srcdir}/incubator-pagespeed-ngx-latest-beta/scripts/format_binary_url.sh" "${srcdir}/incubator-pagespeed-ngx-latest-beta/PSOL_BINARY_URL")" | tar xz
 
 	cd "${srcdir}/ngx_brotli"
 	git submodule update --init
