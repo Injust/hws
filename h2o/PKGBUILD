@@ -1,0 +1,40 @@
+arch=(x86_64)
+backup=(etc/h2o.conf)
+conflicts=(libh2o)
+depends=(libuv libyaml wslay zlib)
+makedepends=(cmake libtool make pkg-config ruby)
+pkgdesc="Optimized HTTP server with support for HTTP/1.x and HTTP/2"
+pkgname=h2o
+pkgrel=1
+pkgver=2.2.4
+provides=(libh2o)
+
+_cmake_options=(
+	-DCMAKE_INSTALL_LIBDIR=/usr/lib
+	-DCMAKE_INSTALL_PREFIX=/usr
+)
+
+sha384sums=(
+	10032e19eef583fc8ff911871d9a9f1db7227b6b81a915364afcc90fc023e1fe8f26016f5059e2e183910d2831be9bb0
+	06307ce77cfb7dad5f5e9cbe18b9bb4f3aecd7c46e21497f3ee302d7fb1a44bd1ded5c3fea8dfc43c1f9d38a0b21dcd1
+)
+
+source=(
+	h2o-${pkgver}.tar.gz::https://codeload.github.com/h2o/h2o/tar.gz/v${pkgver}
+	service
+)
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	cmake ${_cmake_options[@]}
+	make
+	make libh2o
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make "DESTDIR=${pkgdir}" install
+
+	install -Dm644 "${srcdir}/service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+	install -Dm644 "${srcdir}/${pkgname}-${pkgver}/examples/${pkgname}/${pkgname}.conf" "${pkgdir}/etc/${pkgname}.conf"
+}
