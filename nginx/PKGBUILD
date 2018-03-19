@@ -6,7 +6,7 @@ pkgname=nginx
 pkgrel=1
 pkgver=1.13.9
 
-_configure_parameters=(
+_configure_options=(
 	--add-module=../incubator-pagespeed-ngx-latest-beta
 	--add-module=../ngx_brotli
 	--conf-path=/etc/nginx/nginx.conf
@@ -103,7 +103,7 @@ prepare() {
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	./configure ${_configure_parameters[@]}
+	./configure ${_configure_options[@]}
 	make
 }
 
