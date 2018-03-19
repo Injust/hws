@@ -1,4 +1,4 @@
-/var/log/hws/*.log {
+/var/log/nginx/*.log {
 	compress
 	create 644 http http
 	missingok

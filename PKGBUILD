@@ -111,13 +111,11 @@ package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	make "DESTDIR=${pkgdir}" install
 
-	chmod 755 "${pkgdir}/usr/bin/${pkgname}"
 	rm -r "${pkgdir}/etc/${pkgname}"
 
 	install -Dm644 "${srcdir}/logrotate" "${pkgdir}/etc/logrotate.d/${pkgname}"
 	install -Dm644 "${srcdir}/service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
-
-	for _file in "${srcdir}/${pkgname}-${pkgver}/contrib/vim/*"; do
+	for _file in "${srcdir}/${pkgname}-${pkgver}/contrib/vim/"*; do
 		install -Dm644 "${_file}/${pkgname}.vim" "${pkgdir}/usr/share/vim/vimfiles/${_file##*/}/${pkgname}.vim"
 	done
 }

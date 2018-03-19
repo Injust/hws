@@ -1,27 +1,25 @@
 [Unit]
-After=network.target
-Description=Hydronium web server
+After=network.target network-online.target nss-lookup.target
+Description=A high performance web server and a reverse proxy server
 
 [Service]
-Restart=on-failure
-Type=forking
-
 AmbientCapabilities=CAP_NET_BIND_SERVICE
-LimitNOFILE=8192
+KillMode=mixed
+PIDFile=/run/nginx/nginx.pid
+Restart=on-failure
+SyslogLevel=err
+Type=forking
 User=http
 
-CacheDirectory=hws
-LogsDirectory=hws
-RuntimeDirectory=hws
-StateDirectory=hws
+CacheDirectory=nginx
+LogsDirectory=nginx
+RuntimeDirectory=nginx
+StateDirectory=nginx
 
-ExecStartPre=/usr/bin/hws-nginx -t
-ExecStartPre=/usr/bin/hws-caddy -conf=/etc/hws/Caddyfile -validate
-ExecStart=/bin/bash -c "hws-nginx & hws-caddy -conf=/etc/hws/Caddyfile -quic &"
-ExecReload=/usr/bin/hws-nginx -s reload
-ExecReload=/usr/bin/pkill -USR1 -x hws-caddy
-ExecStop=/usr/bin/hws-nginx -s stop
-ExecStop=/usr/bin/pkill -x hws-caddy
+ExecStartPre=/usr/bin/nginx -t
+ExecStart=/bin/nginx
+ExecReload=/usr/bin/nginx -s reload
+ExecStop=/usr/bin/nginx -s stop
 
 PrivateDevices=true
 PrivateTmp=true
