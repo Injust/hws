@@ -1,2 +1,2 @@
-# hws
-Hydronium web server
+# arch-packages
+A collection of customized Arch Linux packages that are used on my server
