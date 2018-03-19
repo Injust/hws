@@ -1,0 +1,50 @@
+arch=(x86_64)
+backup=(etc/ssl/openssl.cnf)
+depends=(perl)
+makedepends=(make patch)
+opensslver=1.1.0g
+pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security"
+pkgname=openssl
+pkgrel=1
+pkgver=${opensslver/[a-z]/.${opensslver//[0-9.]/}}
+
+_build_parameters=(
+	"-Wa,--noexecstack ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}"
+	--libdir=lib
+	--openssldir=/etc/ssl
+	--prefix=/usr
+	enable-ec_nistp_64_gcc_128
+	enable-weak-ssl-ciphers
+	linux-x86_64
+	no-ssl3-method
+	shared
+)
+
+sha384sums=(
+	4d74cc598faacd64ec90a6d59691ace30bcee62220ee03a5a64901b2fe62e99fe861bb5f9fdc8bb16f7abcfe65815f58
+	1731d532fbf2c0d5be497e1c57690554d6836934af39451c79e3eab140404b63925a742da1d05c85475da67835000a05
+	6b679a8f03b9930dc5ebb36a25f4f5d270d5a6118bfc447c77b1f2156ff7d8a25a916992295a98405276e687c321b00d
+)
+
+source=(
+	openssl-${opensslver}.tar.gz::https://www.openssl.org/source/openssl-${opensslver}.tar.gz
+	openssl__ca-dir.patch
+	openssl__equal-preference.patch
+)
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${opensslver}"
+	cat "${srcdir}/${pkgname}__"*.patch | patch -p1
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${opensslver}"
+	./Configure ${_build_parameters[@]}
+	make depend
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${opensslver}"
+	make "DESTDIR=${pkgdir}" install_ssldirs install_sw
+}

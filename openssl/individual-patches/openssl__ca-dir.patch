@@ -1,0 +1,35 @@
+diff --git a/apps/CA.pl.in b/apps/CA.pl.in
+index 3187e47..935b375 100644
+--- a/apps/CA.pl.in
++++ b/apps/CA.pl.in
+@@ -33,7 +33,7 @@ my $X509 = "$openssl x509";
+ my $PKCS12 = "$openssl pkcs12";
+ 
+ # default openssl.cnf file has setup as per the following
+-my $CATOP = "./demoCA";
++my $CATOP = "/etc/ssl";
+ my $CAKEY = "cakey.pem";
+ my $CAREQ = "careq.pem";
+ my $CACERT = "cacert.pem";
+diff --git a/apps/openssl.cnf b/apps/openssl.cnf
+index b3e7444..1d37049 100644
+--- a/apps/openssl.cnf
++++ b/apps/openssl.cnf
+@@ -39,7 +39,7 @@ default_ca	= CA_default		# The default ca section
+ ####################################################################
+ [ CA_default ]
+ 
+-dir		= ./demoCA		# Where everything is kept
++dir		= /etc/ssl		# Where everything is kept
+ certs		= $dir/certs		# Where the issued certs are kept
+ crl_dir		= $dir/crl		# Where the issued crl are kept
+ database	= $dir/index.txt	# database index file.
+@@ -323,7 +323,7 @@ default_tsa = tsa_config1	# the default TSA section
+ [ tsa_config1 ]
+ 
+ # These are used by the TSA reply generation only.
+-dir		= ./demoCA		# TSA root directory
++dir		= /etc/ssl		# TSA root directory
+ serial		= $dir/tsaserial	# The current serial number (mandatory)
+ crypto_device	= builtin		# OpenSSL engine to use for signing
+ signer_cert	= $dir/tsacert.pem 	# The TSA signing certificate
