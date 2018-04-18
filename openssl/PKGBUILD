@@ -2,7 +2,7 @@ arch=(x86_64)
 backup=(etc/ssl/openssl.cnf)
 depends=(perl)
 makedepends=(make patch)
-opensslver=1.1.0g
+opensslver=1.1.0h
 pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security"
 pkgname=openssl
 pkgrel=1
@@ -21,9 +21,9 @@ _configure_options=(
 )
 
 sha384sums=(
-	4d74cc598faacd64ec90a6d59691ace30bcee62220ee03a5a64901b2fe62e99fe861bb5f9fdc8bb16f7abcfe65815f58
+	3b496b3f1592f56cee10a23bc2afc0ee82d8cf4a51a6ca15bc9922ed8080bf67cb00b4f1b47dcae2d8290ac9ec6ad268
 	1731d532fbf2c0d5be497e1c57690554d6836934af39451c79e3eab140404b63925a742da1d05c85475da67835000a05
-	6b679a8f03b9930dc5ebb36a25f4f5d270d5a6118bfc447c77b1f2156ff7d8a25a916992295a98405276e687c321b00d
+	805a9a42d285b2166a5b76c1c5ea3397ab40687de1cab30c116bfa9e99f10edaab30fbf30b816b86cd6889a8c10e6623
 )
 
 source=(
