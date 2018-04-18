@@ -8,7 +8,6 @@ pkgver=1.13.12
 
 _configure_options=(
 	--add-module=../incubator-pagespeed-ngx-latest-beta
-	--add-module=../ngx_brotli
 	--conf-path=/etc/nginx/nginx.conf
 	--error-log-path=stderr
 	--http-client-body-temp-path=/var/lib/nginx/client-body
@@ -69,7 +68,6 @@ sha384sums=(
 	9cb76dcfc98bd9ea3ffa3047a9fda8cfc4b78c050acff930be87945eacbe236b23f6ea387715c507ed79d2b54ace4e4e
 	9f775e455bc6adf1d83dddb4fc90ce935f772dd0ddf81e5dfab9d4af53aa395831d810a1aa2590f0dfe3ac979dd03639
 	bdcabfa111bb89e5a64376c05e27c0752602b321796a4e7b221d64694b502a0b3cd65d82fae73381f8112cc5332c0244
-	SKIP
 	40db5d26fdfe7fd441539fa886567b9f6e524a0730adfad516b2fe46d904c2c44a383e0370dc03fc424cb9084b442b14
 )
 
@@ -80,16 +78,12 @@ source=(
 	nginx__204-headers.patch
 	nginx__autoindex-epoch.patch
 	nginx__autoindex-fts.patch
-	ngx_brotli::git+https://github.com/google/ngx_brotli.git
 	service
 )
 
 prepare() {
 	cd "${srcdir}/incubator-pagespeed-ngx-latest-beta"
 	curl "$("${srcdir}/incubator-pagespeed-ngx-latest-beta/scripts/format_binary_url.sh" "${srcdir}/incubator-pagespeed-ngx-latest-beta/PSOL_BINARY_URL")" | tar xz
-
-	cd "${srcdir}/ngx_brotli"
-	git submodule update --init
 
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	cat "${srcdir}/${pkgname}__"*.patch | patch -p1
