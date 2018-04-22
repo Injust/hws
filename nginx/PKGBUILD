@@ -4,7 +4,7 @@ makedepends=(git make patch)
 pkgdesc="Lightweight HTTP server and IMAP/POP3 proxy server"
 pkgname=nginx
 pkgrel=1
-pkgver=1.13.12
+pkgver=1.14.0
 
 _configure_options=(
 	--add-module=../incubator-pagespeed-ngx-latest-beta
@@ -64,7 +64,7 @@ _configure_options=(
 sha384sums=(
 	0f62be93959eb5df320c9018a0bac69c6f8a167bf838f303751190be10a06384ae10d5726e1fbdec448f1c209d6197c7
 	538fba37831e7aac7f024ed7ba375945b1c7136358576d61e8cdfc4e907edab0495f3da986aff31c9c63068261a57133
-	76e808e31ef5aed63ccda51fd125b78a68493c41178d28954c9db85095891812bedc214191e7b4b272b478ecd86f4a9b
+	9014ddcdc769899ddbd477af56e602127c2166065da16b52f1df12fa0778def25c7168c2a0e4a8186d601f0b9bc41cc1
 	9cb76dcfc98bd9ea3ffa3047a9fda8cfc4b78c050acff930be87945eacbe236b23f6ea387715c507ed79d2b54ace4e4e
 	9f775e455bc6adf1d83dddb4fc90ce935f772dd0ddf81e5dfab9d4af53aa395831d810a1aa2590f0dfe3ac979dd03639
 	bdcabfa111bb89e5a64376c05e27c0752602b321796a4e7b221d64694b502a0b3cd65d82fae73381f8112cc5332c0244
