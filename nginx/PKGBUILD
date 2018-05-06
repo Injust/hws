@@ -32,6 +32,7 @@ _configure_options=(
 	--without-http_map_module
 	--without-http_memcached_module
 	--without-http_mirror_module
+	--without-http_proxy_module
 	--without-http_referer_module
 	--without-http_scgi_module
 	--without-http_split_clients_module
