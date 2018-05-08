@@ -1,5 +1,5 @@
 arch=(x86_64)
-depends=(openssl pcre zlib)
+depends=(pcre zlib)
 makedepends=(git make patch)
 pkgdesc="Lightweight HTTP server and IMAP/POP3 proxy server"
 pkgname=nginx
