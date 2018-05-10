@@ -1,6 +1,6 @@
 arch=(x86_64)
 conflicts=(wslay-git)
-makedepends=(autoconf automake git libtool make pkg-config python-sphinx)
+makedepends=(git python-sphinx)
 pkgdesc="The WebSocket library in C"
 pkgname=wslay
 pkgrel=1

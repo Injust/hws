@@ -1,6 +1,6 @@
 arch=(x86_64)
 backup=(etc/ssl/openssl.cnf)
-makedepends=(make patch perl)
+makedepends=(perl)
 opensslver=1.1.0h
 pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security"
 pkgname=openssl
