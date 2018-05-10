@@ -1,17 +1,16 @@
 arch=(x86_64)
 backup=(etc/h2o.conf)
-conflicts=(libh2o)
 depends=(libuv libyaml wslay zlib)
 makedepends=(cmake libtool make pkg-config)
 pkgdesc="Optimized HTTP server with support for HTTP/1.x and HTTP/2"
 pkgname=h2o
 pkgrel=1
 pkgver=2.2.4
-provides=(libh2o)
 
 _cmake_options=(
 	-DCMAKE_INSTALL_LIBDIR=/usr/lib
 	-DCMAKE_INSTALL_PREFIX=/usr
+	-DWITHOUT_LIBS=ON
 )
 
 sha384sums=(
