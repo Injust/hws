@@ -28,7 +28,6 @@ build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	cmake ${_cmake_options[@]}
 	make
-	make libh2o
 }
 
 package() {
