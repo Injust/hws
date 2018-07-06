@@ -23,12 +23,14 @@ sha384sums=(
 	3b496b3f1592f56cee10a23bc2afc0ee82d8cf4a51a6ca15bc9922ed8080bf67cb00b4f1b47dcae2d8290ac9ec6ad268
 	1731d532fbf2c0d5be497e1c57690554d6836934af39451c79e3eab140404b63925a742da1d05c85475da67835000a05
 	9f0790fd230358466af5eb0d97ea7b05848eba89696a7e13068c36a5505fc0622a48aece89a865f4a896d186361b92ba
+	e23e400aeb751fba32bcb979af3e93eff24639ddcde6488fa25f70e2062a4b699fa8e17c5ad9d486db31991b2744fddd
 )
 
 source=(
 	openssl-${opensslver}.tar.gz::https://www.openssl.org/source/openssl-${opensslver}.tar.gz
 	openssl__ca-dir.patch
 	openssl__equal-preference.patch
+	openssl__weak-ciphers.patch
 )
 
 prepare() {
