@@ -48,7 +48,7 @@ index f070bd2..c8ab3a4 100644
  # define SSL_R_UNINITIALIZED                              276
  # define SSL_R_UNKNOWN_ALERT_TYPE                         246
 diff --git a/ssl/s3_lib.c b/ssl/s3_lib.c
-index ad7532b..0476f7c 100644
+index ad7532b..4b92a87 100644
 --- a/ssl/s3_lib.c
 +++ b/ssl/s3_lib.c
 @@ -3586,6 +3586,17 @@ int ssl3_put_cipher_by_char(const SSL_CIPHER *c, unsigned char *p)
@@ -69,7 +69,7 @@ index ad7532b..0476f7c 100644
  /*
   * ssl3_choose_cipher - choose a cipher from those offered by the client
   * @s: SSL connection
-@@ -3595,12 +3606,21 @@ int ssl3_put_cipher_by_char(const SSL_CIPHER *c, unsigned char *p)
+@@ -3595,12 +3606,23 @@ int ssl3_put_cipher_by_char(const SSL_CIPHER *c, unsigned char *p)
   * Returns the selected cipher or NULL when no common ciphers.
   */
  const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
@@ -83,18 +83,20 @@ index ad7532b..0476f7c 100644
 +    STACK_OF(SSL_CIPHER) *srvr = server_pref->ciphers, *prio, *allow;
 +    int i, ii, ok, safari_ec;
      unsigned long alg_k, alg_a, mask_k, mask_a;
++    
 +    /* in_group_flags will either be NULL, or will point to an array of
 +     * bytes which indicate equal-preference groups in the |prio| stack.
 +     * See the comment about |in_group_flags| in the
 +     * |ssl_cipher_preference_list_st| struct. */
 +    const uint8_t *in_group_flags;
++    
 +    /* group_min contains the minimal index so far found in a group, or -1
 +     * if no such value exists yet. */
 +    int group_min = -1;
  
      /* Let's see which ciphers we can support */
  
-@@ -3632,9 +3652,11 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
+@@ -3632,9 +3654,11 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
  
      if (s->options & SSL_OP_CIPHER_SERVER_PREFERENCE || tls1_suiteb(s)) {
          prio = srvr;
@@ -106,10 +108,12 @@ index ad7532b..0476f7c 100644
          allow = srvr;
      }
  
-@@ -3644,14 +3666,16 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
+@@ -3644,14 +3668,18 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
      for (i = 0; i < sk_SSL_CIPHER_num(prio); i++) {
          c = sk_SSL_CIPHER_value(prio, i);
  
++        
++
 +        ok = 1;
 +
          /* Skip ciphers not supported by the protocol version */
@@ -125,7 +129,7 @@ index ad7532b..0476f7c 100644
  
          mask_k = s->s3->tmp.mask_k;
          mask_a = s->s3->tmp.mask_a;
-@@ -3668,10 +3692,10 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
+@@ -3668,10 +3696,10 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
  #ifndef OPENSSL_NO_PSK
          /* with PSK there must be server callback set */
          if ((alg_k & SSL_PSK) && s->psk_server_callback == NULL)
@@ -138,7 +142,7 @@ index ad7532b..0476f7c 100644
  #ifdef CIPHER_DEBUG
          fprintf(stderr, "%d:[%08lX:%08lX:%08lX:%08lX]%p:%s\n", ok, alg_k,
                  alg_a, mask_k, mask_a, (void *)c, c->name);
-@@ -3688,21 +3712,50 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
+@@ -3688,21 +3716,50 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL *s, STACK_OF(SSL_CIPHER) *clnt,
  
          if (!ok)
              continue;
@@ -791,10 +795,10 @@ index 8a190d2..5f415c4 100644
      /* Dup the client_CA list */
      if (s->client_CA != NULL) {
 diff --git a/ssl/ssl_locl.h b/ssl/ssl_locl.h
-index d86bd7e..0ed87f2 100644
+index d86bd7e..08f34f6 100644
 --- a/ssl/ssl_locl.h
 +++ b/ssl/ssl_locl.h
-@@ -599,9 +599,45 @@ DEFINE_LHASH_OF(X509_NAME);
+@@ -599,9 +599,46 @@ DEFINE_LHASH_OF(X509_NAME);
  
  # define TLSEXT_KEYNAME_LENGTH 16
  
@@ -834,6 +838,7 @@ index d86bd7e..0ed87f2 100644
 +   uint8_t *in_group_flags;
 +};
 +
++
  struct ssl_ctx_st {
      const SSL_METHOD *method;
 -    STACK_OF(SSL_CIPHER) *cipher_list;
@@ -841,7 +846,7 @@ index d86bd7e..0ed87f2 100644
      /* same as above but sorted for lookup */
      STACK_OF(SSL_CIPHER) *cipher_list_by_id;
      struct x509_store_st /* X509_STORE */ *cert_store;
-@@ -935,7 +971,7 @@ struct ssl_st {
+@@ -935,7 +972,7 @@ struct ssl_st {
      /* Per connection DANE state */
      SSL_DANE dane;
      /* crypto */
@@ -850,7 +855,7 @@ index d86bd7e..0ed87f2 100644
      STACK_OF(SSL_CIPHER) *cipher_list_by_id;
      /*
       * These are the ones being used, the ones in SSL_SESSION are the ones to
-@@ -1802,12 +1838,17 @@ DECLARE_OBJ_BSEARCH_GLOBAL_CMP_FN(SSL_CIPHER, SSL_CIPHER, ssl_cipher_id);
+@@ -1802,12 +1839,18 @@ DECLARE_OBJ_BSEARCH_GLOBAL_CMP_FN(SSL_CIPHER, SSL_CIPHER, ssl_cipher_id);
  __owur int ssl_cipher_ptr_id_cmp(const SSL_CIPHER *const *ap,
                                   const SSL_CIPHER *const *bp);
  __owur STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *meth,
@@ -861,7 +866,8 @@ index d86bd7e..0ed87f2 100644
 -                                                    CERT *c);
 +                                    struct ssl_cipher_preference_list_st **pref,
 +                                    STACK_OF(SSL_CIPHER) **sorted,
-+                                    const char *rule_str, CERT *c);
++                                    const char *rule_str, 
++                                                CERT *c);
  void ssl_update_cache(SSL *s, int mode);
 +struct ssl_cipher_preference_list_st* ssl_cipher_preference_list_dup(
 +        struct ssl_cipher_preference_list_st *cipher_list);
@@ -873,7 +879,7 @@ index d86bd7e..0ed87f2 100644
  __owur int ssl_cipher_get_evp(const SSL_SESSION *s, const EVP_CIPHER **enc,
                                const EVP_MD **md, int *mac_pkey_type,
                                int *mac_secret_size, SSL_COMP **comp,
-@@ -1879,8 +1920,8 @@ __owur int ssl3_finish_mac(SSL *s, const unsigned char *buf, int len);
+@@ -1879,8 +1922,8 @@ __owur int ssl3_finish_mac(SSL *s, const unsigned char *buf, int len);
  void ssl3_free_digest_list(SSL *s);
  __owur unsigned long ssl3_output_cert_chain(SSL *s, CERT_PKEY *cpk);
  __owur const SSL_CIPHER *ssl3_choose_cipher(SSL *ssl,
