@@ -12,7 +12,6 @@ _configure_options=(
 	--libdir=lib
 	--openssldir=/etc/ssl
 	--prefix=/usr
-	enable-ec_nistp_64_gcc_128
 	enable-weak-ssl-ciphers
 	linux-x86_64
 	no-ssl3-method
