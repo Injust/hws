@@ -14,7 +14,6 @@ _configure_options=(
 	--prefix=/usr
 	enable-weak-ssl-ciphers
 	linux-x86_64
-	no-ssl3-method
 	shared
 )
 
