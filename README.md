@@ -1,2 +1,2 @@
 # arch-packages
-A collection of customized Arch Linux packages used on my servers
+A collection of customized packages used on my Arch Linux servers
